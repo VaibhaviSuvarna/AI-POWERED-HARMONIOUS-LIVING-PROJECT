@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Camera, Upload, Palette, X, Info, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Camera, Upload, Palette, X, Info, CheckCircle, AlertTriangle, ArrowLeft } from 'lucide-react';
 
 const AIColorDetection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -11,10 +11,76 @@ const AIColorDetection = () => {
   const [clickPosition, setClickPosition] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [showColorGuide, setShowColorGuide] = useState(false);
+  const [selectedGuideColor, setSelectedGuideColor] = useState(null);
   const fileInputRef = useRef(null);
   const imageRef = useRef(null);
 
   const API_BASE_URL = 'http://localhost:5000';
+
+  // Color guide data
+  const colorGuideData = {
+    red: {
+      name: 'Red',
+      hex: '#ef4444',
+      vastu: {
+        element: 'Fire',
+        directions: ['South', 'Southeast'],
+        rooms: ['Kitchen', 'Dining Room', 'Living Room'],
+        benefits: ['Enhances energy and passion', 'Stimulates appetite', 'Promotes courage and strength'],
+        cautions: ['Avoid in bedrooms - can cause restlessness', 'Too much red can increase aggression', 'Not suitable for study rooms'],
+        tips: ['Use as accent color rather than dominant', 'Pair with neutral colors for balance', 'Great for kitchen backsplash or dining area']
+      }
+    },
+    orange: {
+      name: 'Orange',
+      hex: '#f97316',
+      vastu: {
+        element: 'Fire',
+        directions: ['South', 'Southeast', 'Southwest'],
+        rooms: ['Living Room', 'Dining Room', 'Kitchen'],
+        benefits: ['Promotes enthusiasm and creativity', 'Enhances social interaction', 'Brings warmth and joy'],
+        cautions: ['Can be overwhelming in large doses', 'May cause restlessness if overused'],
+        tips: ['Perfect for accent walls', 'Use in social spaces', 'Combine with earth tones for grounding']
+      }
+    },
+    yellow: {
+      name: 'Yellow',
+      hex: '#eab308',
+      vastu: {
+        element: 'Earth',
+        directions: ['Northeast', 'North', 'East'],
+        rooms: ['Study Room', 'Kitchen', 'Living Room', 'Children\'s Room'],
+        benefits: ['Enhances mental clarity and concentration', 'Brings positivity and happiness', 'Stimulates intellect'],
+        cautions: ['Bright yellow can cause eye strain', 'May increase anxiety if too intense'],
+        tips: ['Ideal for study areas and workspaces', 'Use soft yellow for bedrooms', 'Great for kitchen cabinets']
+      }
+    },
+    green: {
+      name: 'Green',
+      hex: '#22c55e',
+      vastu: {
+        element: 'Wood/Nature',
+        directions: ['East', 'Southeast', 'North'],
+        rooms: ['Bedroom', 'Living Room', 'Study Room', 'Balcony'],
+        benefits: ['Promotes healing and growth', 'Brings peace and harmony', 'Enhances prosperity'],
+        cautions: ['Dark green can make spaces feel heavy', 'Avoid in bathrooms according to traditional Vastu'],
+        tips: ['Perfect for bedrooms and relaxation areas', 'Use plants to bring natural green', 'Light green is universally harmonious']
+      }
+    },
+    blue: {
+      name: 'Blue',
+      hex: '#3b82f6',
+      vastu: {
+        element: 'Water',
+        directions: ['North', 'Northeast'],
+        rooms: ['Bedroom', 'Study Room', 'Bathroom', 'Office'],
+        benefits: ['Promotes calmness and peace', 'Enhances focus and concentration', 'Brings cooling energy'],
+        cautions: ['Too much blue can cause depression', 'Cold blues may reduce warmth in relationships'],
+        tips: ['Excellent for bedrooms and study areas', 'Use lighter shades for better energy flow', 'Combine with warm accents']
+      }
+    }
+  };
 
   const handleImageUpload = async (file) => {
     if (!file) return;
@@ -107,6 +173,11 @@ const AIColorDetection = () => {
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  const handleColorGuideClick = (colorKey) => {
+    setSelectedGuideColor(colorGuideData[colorKey]);
+    setShowColorGuide(true);
   };
 
   const resetImage = () => {
@@ -276,7 +347,7 @@ const AIColorDetection = () => {
             </div>
           </div>
 
-          {/* Right Side - Color Analysis or Color Meanings */}
+          {/* Right Side  */}
           <div className="order-1 lg:order-2">
             {showAnalysis && colorAnalysis ? (
               /* Color Analysis Results */
@@ -349,13 +420,93 @@ const AIColorDetection = () => {
 
                 <button
                   onClick={() => setShowAnalysis(false)}
-                  className="w-full mt-6 px-4 py-2 text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors duration-200"
+                  className="w-full mt-6 px-4 py-2 text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors duration-200 flex items-center justify-center"
                 >
-                  ← Back to Color Detection
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Color Detection
+                </button>
+              </div>
+            ) : showColorGuide && selectedGuideColor ? (
+              /* Color Guide Details */
+              <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-orange-100 shadow-lg">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"
+                       style={{ backgroundColor: selectedGuideColor.hex }}>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                    {selectedGuideColor.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Element: {selectedGuideColor.vastu.element}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Suitable Directions */}
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <h5 className="font-medium text-blue-800 mb-2">🧭 Best Directions</h5>
+                    <p className="text-sm text-blue-700">{selectedGuideColor.vastu.directions.join(', ')}</p>
+                  </div>
+
+                  {/* Suitable Rooms */}
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <h5 className="font-medium text-green-800 mb-2">🏠 Ideal Rooms</h5>
+                    <p className="text-sm text-green-700">{selectedGuideColor.vastu.rooms.join(', ')}</p>
+                  </div>
+
+                  {/* Benefits */}
+                  <div className="bg-purple-50 rounded-lg p-4">
+                    <h5 className="font-medium text-purple-800 mb-2">✨ Benefits</h5>
+                    <ul className="text-sm text-purple-700 space-y-1">
+                      {selectedGuideColor.vastu.benefits.map((benefit, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Cautions */}
+                  <div className="bg-yellow-50 rounded-lg p-4">
+                    <h5 className="font-medium text-yellow-800 mb-2">⚠️ Cautions</h5>
+                    <ul className="text-sm text-yellow-700 space-y-1">
+                      {selectedGuideColor.vastu.cautions.map((caution, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{caution}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Tips */}
+                  <div className="bg-orange-50 rounded-lg p-4">
+                    <h5 className="font-medium text-orange-800 mb-2">💡 Tips</h5>
+                    <ul className="text-sm text-orange-700 space-y-1">
+                      {selectedGuideColor.vastu.tips.map((tip, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setShowColorGuide(false);
+                    setSelectedGuideColor(null);
+                  }}
+                  className="w-full mt-6 px-4 py-2 text-orange-600 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Color Guide
                 </button>
               </div>
             ) : (
-              /* Default Color Meanings */
+              /* Default Color Guide */
               <div className="bg-white bg-opacity-70 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-orange-100 shadow-lg">
                 {/* Icon and Title */}
                 <div className="text-center mb-6">
@@ -363,26 +514,46 @@ const AIColorDetection = () => {
                     <Palette className="w-8 h-8 text-orange-600" />
                   </div>
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-                    Discover Color Meanings
+                    Color Guide & Meanings
                   </h3>
                   <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
-                    Upload an image and click on any color to learn about its significance in Vastu Shastra and how it can enhance your living space.
+                    Click on any color below to learn about its Vastu significance, or upload an image above for AI analysis.
                   </p>
                 </div>
 
-                {/* Color Palette */}
-                <div className="grid grid-cols-5 gap-3 sm:gap-4 md:gap-6">
-                  <div className="aspect-square bg-red-500 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer hover:scale-105 transform transition-transform"></div>
-                  <div className="aspect-square bg-orange-500 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer hover:scale-105 transform transition-transform"></div>
-                  <div className="aspect-square bg-yellow-400 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer hover:scale-105 transform transition-transform"></div>
-                  <div className="aspect-square bg-green-500 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer hover:scale-105 transform transition-transform"></div>
-                  <div className="aspect-square bg-blue-600 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer hover:scale-105 transform transition-transform"></div>
+                {/* Interactive Color Palette */}
+                <div className="grid grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6">
+                  <button
+                    onClick={() => handleColorGuideClick('red')}
+                    className="aspect-square bg-red-500 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-red-300"
+                    title="Learn about Red"
+                  />
+                  <button
+                    onClick={() => handleColorGuideClick('orange')}
+                    className="aspect-square bg-orange-500 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-orange-300"
+                    title="Learn about Orange"
+                  />
+                  <button
+                    onClick={() => handleColorGuideClick('yellow')}
+                    className="aspect-square bg-yellow-400 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                    title="Learn about Yellow"
+                  />
+                  <button
+                    onClick={() => handleColorGuideClick('green')}
+                    className="aspect-square bg-green-500 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-green-300"
+                    title="Learn about Green"
+                  />
+                  <button
+                    onClick={() => handleColorGuideClick('blue')}
+                    className="aspect-square bg-blue-600 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    title="Learn about Blue"
+                  />
                 </div>
 
                 {/* Additional Info */}
-                <div className="mt-6 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200">
+                <div className="p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200">
                   <p className="text-xs sm:text-sm md:text-base text-orange-800 text-center font-medium">
-                    ✨ Upload an image and select room details to get personalized Vastu color analysis
+                    ✨ Click any color above for detailed Vastu guidance, or upload an image for AI analysis
                   </p>
                 </div>
               </div>

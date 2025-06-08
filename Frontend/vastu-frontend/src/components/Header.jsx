@@ -12,41 +12,117 @@ import {
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Navigation handler function
+  const handleNavigation = (targetId) => {
+    if (targetId === 'home') {
+      // Scroll to top of the page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // Scroll to specific section
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+    // Close mobile menu after navigation
+    setMenuOpen(false);
+  };
+
   return (
-    <header className="p-4 shadow-md text-2xl">
-      <div className="flex justify-between items-center">
-        <div className="text-3xl font-bold">Harmonious Living</div>
+    <header className="bg-white shadow-md fixed w-full top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo */}
+        <div className="text-2xl font-bold text-black-400">
+          AI-Powered Harmonious Living
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-8">
+          <button
+            onClick={() => handleNavigation('home')}
+            className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200"
+          >
+            <FontAwesomeIcon icon={faHome} />
+            <span>Home</span>
+          </button>
+          
+          <button
+            onClick={() => handleNavigation('AIColorDetection')}
+            className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200"
+          >
+            <FontAwesomeIcon icon={faPalette} />
+            <span>Color Scan</span>
+          </button>
+          
+          <button
+            onClick={() => handleNavigation('VastuGuideLines')}
+            className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200"
+          >
+            <FontAwesomeIcon icon={faBalanceScale} />
+            <span>Vastu Rules</span>
+          </button>
+          
+          <button
+            onClick={() => handleNavigation('AIColorDetection')}
+            className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200"
+          >
+            <FontAwesomeIcon icon={faBookOpen} />
+            <span>Color Guide</span>
+          </button>
+        </nav>
+
+        {/* Mobile Menu Toggle */}
         <button
-          className="lg:hidden text-3xl"
+          className="md:hidden text-gray-700 hover:text-orange-600"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
+          <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} size="lg" />
         </button>
-        <nav className="hidden lg:flex gap-8">
-          <a href="#home"><FontAwesomeIcon icon={faHome} className="px-2" />Home</a>
-          <a href="#color-scan"><FontAwesomeIcon icon={faPalette} className="px-2" />Color Scan</a>
-          <a href="#vastu-rules"><FontAwesomeIcon icon={faBalanceScale} className="px-2" />Vastu Rules</a>
-          <a href="#color-guide"><FontAwesomeIcon icon={faBookOpen} className="px-2" />Color Guide</a>
-        </nav>
       </div>
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <nav className="flex flex-col items-start gap-4 mt-4 lg:hidden text-xl">
-          <a href="#home" onClick={() => setMenuOpen(false)}>
-            <FontAwesomeIcon icon={faHome} className="px-2" />Home
-          </a>
-          <a href="#color-scan" onClick={() => setMenuOpen(false)}>
-            <FontAwesomeIcon icon={faPalette} className="px-2" />Color Scan
-          </a>
-          <a href="#vastu-rules" onClick={() => setMenuOpen(false)}>
-            <FontAwesomeIcon icon={faBalanceScale} className="px-2" />Vastu Rules
-          </a>
-          <a href="#color-guide" onClick={() => setMenuOpen(false)}>
-            <FontAwesomeIcon icon={faBookOpen} className="px-2" />Color Guide
-          
-          </a>
-        </nav>
+        <div className="md:hidden bg-white border-t shadow-lg">
+          <nav className="flex flex-col p-4 space-y-3">
+            <button
+              onClick={() => handleNavigation('home')}
+              className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 transition-colors duration-200 py-2"
+            >
+              <FontAwesomeIcon icon={faHome} />
+              <span>Home</span>
+            </button>
+            
+            <button
+              onClick={() => handleNavigation('AIColorDetection')}
+              className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 transition-colors duration-200 py-2"
+            >
+              <FontAwesomeIcon icon={faPalette} />
+              <span>Color Scan</span>
+            </button>
+            
+            <button
+              onClick={() => handleNavigation('VastuGuideLines')}
+              className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 transition-colors duration-200 py-2"
+            >
+              <FontAwesomeIcon icon={faBalanceScale} />
+              <span>Vastu Rules</span>
+            </button>
+            
+            <button
+              onClick={() => handleNavigation('AIColorDetection')}
+              className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 transition-colors duration-200 py-2"
+            >
+              <FontAwesomeIcon icon={faBookOpen} />
+              <span>Color Guide</span>
+            </button>
+          </nav>
+        </div>
       )}
     </header>
   );
