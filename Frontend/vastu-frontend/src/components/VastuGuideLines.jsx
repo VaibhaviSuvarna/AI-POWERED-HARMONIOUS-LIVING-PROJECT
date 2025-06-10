@@ -587,7 +587,7 @@ const VastuGuidelines = () => {
           </div>
         </div>
 
-        {/* Section Info */}
+
         <div className="text-center mb-6">
           {activeSection === 'directions' && (
             <p className="text-gray-600">Complete guide to all 8 directions according to Vastu Shastra</p>

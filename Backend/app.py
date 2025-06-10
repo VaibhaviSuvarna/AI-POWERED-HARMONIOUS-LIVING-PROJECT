@@ -8,6 +8,11 @@ from werkzeug.utils import secure_filename
 import base64
 from PIL import Image
 import io
+from ultralytics import YOLO
+
+# I have used YOLOv8l model used for accuracy and speed 
+YOLO_MODEL_PATH = 'yolov8l.pt'
+yolo_model = YOLO(YOLO_MODEL_PATH)
 
 app = Flask(__name__)
 
@@ -166,7 +171,7 @@ def get_vastu_recommendation(color_name, direction, room_type):
     direction = direction.lower() if direction else ''
     room_type = room_type.lower() if room_type else ''
     color_lower = color_name.lower()
-    
+
     
     vastu_guidelines = {
         'north': {
@@ -224,8 +229,8 @@ def get_vastu_recommendation(color_name, direction, room_type):
             'benefit': 'balance and stability'
         }
     }
-    
-    
+
+
     room_guidelines = {
         'living-room': {
             'recommended': ['white', 'cream', 'light yellow', 'light green'],
@@ -252,16 +257,74 @@ def get_vastu_recommendation(color_name, direction, room_type):
             'purpose': 'productivity and success'
         }
     }
-    
+
+    direction_color_table = {
+        'north': {
+            'element': 'Water',
+            'ideal_colors': ['green', 'blue'],
+            'taboos': ['heavy storage', 'toilets'],
+            'recommendations': ['Wealth vaults', 'Tulsi plant', 'water features (fountains)', 'study desks']
+        },
+        'northeast': {
+            'element': 'Water + Air',
+            'ideal_colors': ['light blue', 'white'],
+            'taboos': ['toilets', 'heavy furniture', 'clutter'],
+            'recommendations': ['Puja room', 'meditation area', 'water source', 'open windows']
+        },
+        'east': {
+            'element': 'Air',
+            'ideal_colors': ['light blue', 'white', 'green'],
+            'taboos': ['stairs', 'toilets', 'large trees blocking light'],
+            'recommendations': ['Main entrance', 'morning sunlight access', 'tulsi plant']
+        },
+        'southeast': {
+            'element': 'Fire',
+            'ideal_colors': ['orange', 'pink', 'red'],
+            'taboos': ['toilets', 'bedrooms', 'underground tanks'],
+            'recommendations': ['Kitchen', 'electrical equipment', 'lighting setup']
+        },
+        'south': {
+            'element': 'Fire',
+            'ideal_colors': ['red', 'maroon'],
+            'taboos': ['water bodies', 'open spaces', 'entrances'],
+            'recommendations': ['Storage', 'bedrooms', 'office for people in authority']
+        },
+        'southwest': {
+            'element': 'Earth',
+            'ideal_colors': ['brown', 'yellow', 'peach'],
+            'taboos': ['bathrooms', 'water tanks', 'cut corners'],
+            'recommendations': ['Master bedroom', 'safe/vault', 'heavy furniture']
+        },
+        'west': {
+            'element': 'Water',
+            'ideal_colors': ['grey', 'blue', 'white'],
+            'taboos': ['large openings', 'water tanks'],
+            'recommendations': ["Dining area", "children's bedroom", 'storage']
+        },
+        'northwest': {
+            'element': 'Air',
+            'ideal_colors': ['white', 'cream', 'light grey'],
+            'taboos': ['heavy furniture', 'septic tanks'],
+            'recommendations': ['Guest room', 'storage', 'washroom (if well-placed)']
+        },
+        'center': {
+            'element': 'Space',
+            'ideal_colors': ['off-white', 'light tones'],
+            'taboos': ['pillars', 'walls', 'heavy weight', 'toilets'],
+            'recommendations': ['Keep clean and open', 'place decorative items', 'small skylight']
+        }
+    }
+
     recommendation = {
         'color_analysis': f"Detected color: {color_name}",
         'direction_suitability': '',
         'room_suitability': '',
         'overall_recommendation': '',
-        'tips': []
+        'tips': [],
+        'direction_color_info': None
     }
     
-    # Checking direction suitability
+    # direction suitability
     if direction in vastu_guidelines:
         guideline = vastu_guidelines[direction]
         is_favorable = any(fav_color in color_lower for fav_color in guideline['favorable'])
@@ -274,7 +337,7 @@ def get_vastu_recommendation(color_name, direction, room_type):
         else:
             recommendation['direction_suitability'] = f"🔶 {color_name} is neutral for {direction.title()} direction. Recommended colors: {', '.join(guideline['favorable'])}."
     
-    # Checking room suitability
+    #  room suitability
     if room_type in room_guidelines:
         room_guide = room_guidelines[room_type]
         is_room_suitable = any(rec_color in color_lower for rec_color in room_guide['recommended'])
@@ -292,7 +355,7 @@ def get_vastu_recommendation(color_name, direction, room_type):
     else:
         recommendation['overall_recommendation'] = "👍 This color is acceptable but could be optimized for better energy flow."
     
-    # Adding general tips
+    # tips
     recommendation['tips'] = [
         "Use lighter shades for smaller rooms to create spaciousness",
         "Combine colors thoughtfully - avoid conflicting elements",
@@ -300,11 +363,194 @@ def get_vastu_recommendation(color_name, direction, room_type):
         "Consider the psychological impact of colors on mood"
     ]
     
+    
+    if direction in direction_color_table:
+        dct = direction_color_table[direction]
+       
+        match = any(ideal_color in color_lower for ideal_color in [c.lower() for c in dct['ideal_colors']])
+        recommendation['direction_color_info'] = {
+            'element': dct['element'],
+            'ideal_colors': dct['ideal_colors'],
+            'taboos': dct['taboos'],
+            'recommendations': dct['recommendations'],
+            'match': match
+        }
+
     return recommendation
+
+def get_object_vastu_recommendation(object_name, color_name, direction):
+
+    object_vastu = {
+        'chair': {
+            'north': 'North-facing chair is good for career growth.',
+            'south': 'South-facing chair is good for leadership.',
+            'east': 'East-facing chair is best for students.',
+            'west': 'West-facing chair is good for creative work.',
+            'northeast': 'Northeast is very good for meditation chairs.',
+            'southeast': 'Southeast is good for dining chairs.',
+            'southwest': 'Southwest is stable for armchairs.',
+            'northwest': 'Northwest is good for guest chairs.'
+        },
+        'couch': {
+            'north': 'Place sofa facing North for prosperity. Use white or green covers.',
+            'south': 'South-facing sofa is good for fame. Use red or orange.',
+            'east': 'East is ideal for social harmony. Use light green or cream.',
+            'west': 'West is good for creativity. Use yellow or gray.',
+            'northeast': 'Northeast is very good for sofas. Use light colors.',
+            'southeast': 'Southeast is less ideal. Use warm colors if placed here.',
+            'southwest': 'Southwest is stable for heavy sofas.',
+            'northwest': 'Northwest is good for movement and guests.'
+        },
+        'sofa': {
+            'north': 'Place sofa facing North for prosperity. Use white or green covers.',
+            'south': 'South-facing sofa is good for fame. Use red or orange.',
+            'east': 'East is ideal for social harmony. Use light green or cream.',
+            'west': 'West is good for creativity. Use yellow or gray.',
+            'northeast': 'Northeast is very good for sofas. Use light colors.',
+            'southeast': 'Southeast is less ideal. Use warm colors if placed here.',
+            'southwest': 'Southwest is stable for heavy sofas.',
+            'northwest': 'Northwest is good for movement and guests.'
+        },
+        'potted plant': {
+            'north': 'North is good for potted plants, especially money plant.',
+            'east': 'East is best for indoor plants for health and growth.',
+            'northeast': 'Northeast is very good for plants.',
+            'southeast': 'Southeast is less ideal for plants.',
+            'south': 'South is not recommended for plants.',
+            'southwest': 'Southwest is not recommended for plants.',
+            'west': 'West is acceptable for flowering plants.',
+            'northwest': 'Northwest is good for air-purifying plants.'
+        },
+        'bed': {
+            'north': 'Avoid placing the bed in the North. Use light blue or white bedsheets for better sleep.',
+            'south': 'South is ideal for bed placement. Use red, orange, or pink for prosperity.',
+            'east': 'East is acceptable for bed placement. Use light green or cream.',
+            'west': 'West is good for stability. Use yellow or gray.',
+            'northeast': 'Avoid placing the bed in the Northeast. It may disturb peace.',
+            'southeast': 'Avoid placing the bed in the Southeast. It may cause restlessness.',
+            'southwest': 'Best for master bedrooms. Promotes stability and relationships.',
+            'northwest': 'Good for guest bedrooms. Promotes movement.'
+        },
+        'dining table': {
+            'north': 'North is less ideal for dining tables.',
+            'south': 'South is acceptable.',
+            'east': 'East is good for dining tables.',
+            'west': 'West is best for dining tables. Promotes family bonding.',
+            'northeast': 'Northeast is not recommended for dining tables.',
+            'southeast': 'Southeast is good for dining tables.',
+            'southwest': 'Southwest is stable for heavy dining tables.',
+            'northwest': 'Northwest is good for round dining tables.'
+        },
+        'toilet': {
+            'north': 'Avoid toilets in the North.',
+            'south': 'South is acceptable for toilets.',
+            'east': 'East is less ideal for toilets.',
+            'west': 'West is acceptable.',
+            'northeast': 'Avoid toilets in the Northeast.',
+            'southeast': 'Southeast is acceptable.',
+            'southwest': 'Southwest is not recommended.',
+            'northwest': 'Northwest is acceptable.'
+        },
+        'tv': {
+            'north': 'North is acceptable for TV units.',
+            'south': 'Avoid TV on South wall.',
+            'east': 'East is good for TV units.',
+            'west': 'West is acceptable.',
+            'northeast': 'Northeast is not recommended.',
+            'southeast': 'Southeast is best for TV units.',
+            'southwest': 'Southwest is not recommended.',
+            'northwest': 'Northwest is acceptable.'
+        },
+        'laptop': {
+            'north': 'North is good for work with laptops.',
+            'south': 'South is good for leadership tasks.',
+            'east': 'East is best for study/work with laptops.',
+            'west': 'West is good for creative laptop work.',
+            'northeast': 'Northeast is good for research.',
+            'southeast': 'Southeast is good for tech work.',
+            'southwest': 'Southwest is stable for long work.',
+            'northwest': 'Northwest is good for meetings.'
+        },
+        'microwave': {
+            'north': 'North is not recommended for microwaves.',
+            'south': 'South is acceptable.',
+            'east': 'East is good for microwaves.',
+            'west': 'West is acceptable.',
+            'northeast': 'Northeast is not recommended.',
+            'southeast': 'Southeast is best for microwaves.',
+            'southwest': 'Southwest is not recommended.',
+            'northwest': 'Northwest is acceptable.'
+        },
+        'oven': {
+            'north': 'North is not recommended for ovens.',
+            'south': 'South is acceptable.',
+            'east': 'East is good for ovens.',
+            'west': 'West is acceptable.',
+            'northeast': 'Northeast is not recommended.',
+            'southeast': 'Southeast is best for ovens.',
+            'southwest': 'Southwest is not recommended.',
+            'northwest': 'Northwest is acceptable.'
+        },
+        'sink': {
+            'north': 'North is good for sinks.',
+            'south': 'South is less ideal for sinks.',
+            'east': 'East is good for sinks.',
+            'west': 'West is acceptable.',
+            'northeast': 'Northeast is best for sinks.',
+            'southeast': 'Southeast is less ideal.',
+            'southwest': 'Southwest is not recommended.',
+            'northwest': 'Northwest is acceptable.'
+        },
+        'refrigerator': {
+            'north': 'North is good for refrigerators.',
+            'south': 'South is less ideal.',
+            'east': 'East is good for refrigerators.',
+            'west': 'West is acceptable.',
+            'northeast': 'Northeast is not recommended.',
+            'southeast': 'Southeast is best for refrigerators.',
+            'southwest': 'Southwest is not recommended.',
+            'northwest': 'Northwest is acceptable.'
+        },
+        'book': {
+            'north': 'North is good for bookshelves/books.',
+            'south': 'South is less ideal.',
+            'east': 'East is best for books.',
+            'west': 'West is good for creative books.',
+            'northeast': 'Northeast is ideal for study books.',
+            'southeast': 'Southeast is good for cookbooks.',
+            'southwest': 'Southwest is stable for heavy books.',
+            'northwest': 'Northwest is good for guest books.'
+        },
+        'clock': {
+            'north': 'North is best for clocks.',
+            'south': 'South is less ideal.',
+            'east': 'East is also good.',
+            'west': 'West is acceptable.',
+            'northeast': 'Northeast is good for meditation clocks.',
+            'southeast': 'Southeast is good for kitchen clocks.',
+            'southwest': 'Southwest is stable for antique clocks.',
+            'northwest': 'Northwest is good for guest clocks.'
+        },
+        'vase': {
+            'north': 'North is good for vases with water.',
+            'south': 'South is good for red flowers.',
+            'east': 'East is good for fresh flowers.',
+            'west': 'West is good for metal vases.',
+            'northeast': 'Northeast is very good for vases.',
+            'southeast': 'Southeast is good for decorative vases.',
+            'southwest': 'Southwest is stable for heavy vases.',
+            'northwest': 'Northwest is good for guest vases.'
+        }
+    }
+    obj = object_name.lower()
+    dir = direction.lower() if direction else ''
+    if obj in object_vastu and dir in object_vastu[obj]:
+        return object_vastu[obj][dir]
+    return f"No specific Vastu guideline for {object_name} in {direction}."
 
 @app.route('/')
 def home():
-    return jsonify({'message': 'Flask Vastu Color Detection API is running!', 'status': 'active'})
+    return jsonify({'message': 'Flask Vastu Color and Object Detection API is running!', 'status': 'active'})
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -412,10 +658,10 @@ def detect_color():
         # Geting averaged color from a small region more accurate than single pixel therefore
         r, g, b = get_averaged_color(img, x, y, radius=2)
         
-        # Getting color name
+       
         color_name = get_color_name(r, g, b)
         
-        # Get Vastu recommendation
+       
         vastu_rec = get_vastu_recommendation(color_name, direction, room_type)
         
         # Converting RGB to HEX
@@ -522,6 +768,72 @@ def analyze_image():
     except Exception as e:
         return jsonify({'error': f'Image analysis failed: {str(e)}'}), 500
 
+@app.route('/analyze_image_with_objects', methods=['POST'])
+def analyze_image_with_objects():
+    try:
+        data = request.json
+        filename = data.get('filename')
+        direction = data.get('direction', '')
+        room_type = data.get('room_type', '')
+        if not filename:
+            return jsonify({'error': 'Missing filename'}), 400
+        img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if not os.path.exists(img_path):
+            return jsonify({'error': 'Image not found'}), 404
+        img = cv2.imread(img_path)
+        if img is None:
+            return jsonify({'error': 'Failed to read image'}), 500
+        
+        
+
+        max_dim = 640
+        height, width = img.shape[:2]
+        if max(height, width) > max_dim:
+            scale = max_dim / float(max(height, width))
+            img = cv2.resize(img, (int(width * scale), int(height * scale)))
+
+        # Used the preloaded YOLO model with higher confidence threshold(higer confidence threshold helps to reduce chances of wrong detection )
+        results = yolo_model(img, conf=0.3)  
+        detected_objects = []
+        for r in results:
+            boxes = r.boxes
+            names = r.names if hasattr(r, 'names') else yolo_model.names
+            for box in boxes:
+                cls_id = int(box.cls[0])
+                object_name = names[cls_id] if names and cls_id < len(names) else str(cls_id)
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                object_vastu = get_object_vastu_recommendation(object_name, '', direction)
+
+                #  bounding box and label on image
+
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                label = f"{object_name}"
+                cv2.putText(img, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                detected_objects.append({
+                    'object': object_name,
+                    'object_vastu_guideline': object_vastu,
+                    'bbox': {'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2}
+                })
+        # Saved the image with boxes to a new file
+        boxed_filename = f"boxed_{filename}"
+        boxed_path = os.path.join(app.config['UPLOAD_FOLDER'], boxed_filename)
+        cv2.imwrite(boxed_path, img)
+
+        # Encoding boxed image to base64 for frontend display
+        
+        with open(boxed_path, 'rb') as img_file:
+            boxed_img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+        boxed_img_data = f"data:image/{boxed_filename.split('.')[-1].lower()};base64,{boxed_img_base64}"
+        return jsonify({
+            'success': True,
+            'detected_objects': detected_objects,
+            'boxed_image': boxed_img_data,
+            'direction': direction,
+            'room_type': room_type
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Object detection and analysis failed: {str(e)}'}), 500
+
 @app.errorhandler(413)
 def too_large(e):
     return jsonify({'error': 'File too large. Maximum size is 16MB.'}), 413
@@ -535,11 +847,12 @@ def internal_error(e):
     return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
-    print("Starting Vastu Color Detection API...")
+    print("Starting Vastu Color and Object Detection API...")
     print("Available endpoints:")
     print("  POST /upload - Upload image")
     print("  POST /detect_color - Detect color at coordinates")
     print("  POST /analyze_image - Analyze dominant colors")
+    print("  POST /analyze_image_with_objects - Analyze image with object detection")
     print("  GET /uploads/<filename> - Serve uploaded files")
     
     app.run(debug=True, host='0.0.0.0', port=5000)

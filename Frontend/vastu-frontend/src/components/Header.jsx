@@ -12,16 +12,16 @@ import {
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Navigation handler function
+
   const handleNavigation = (targetId) => {
     if (targetId === 'home') {
-      // Scroll to top of the page
+     
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
     } else {
-      // Scroll to specific section
+     
       const element = document.getElementById(targetId);
       if (element) {
         element.scrollIntoView({
@@ -37,12 +37,12 @@ const Header = () => {
   return (
     <header className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo */}
+       
         <div className="text-2xl font-bold text-black-400">
           AI-Powered Harmonious Living
         </div>
 
-        {/* Desktop Navigation */}
+     
         <nav className="hidden md:flex space-x-8">
           <button
             onClick={() => handleNavigation('home')}
@@ -69,7 +69,7 @@ const Header = () => {
           </button>
           
           <button
-            onClick={() => handleNavigation('AIColorDetection')}
+            onClick={() => handleNavigation('ColorGuideVastu')}
             className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200"
           >
             <FontAwesomeIcon icon={faBookOpen} />
@@ -77,7 +77,7 @@ const Header = () => {
           </button>
         </nav>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Menu Toggle Section*/}
         <button
           className="md:hidden text-gray-700 hover:text-orange-600"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -86,7 +86,7 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+    
       {menuOpen && (
         <div className="md:hidden bg-white border-t shadow-lg">
           <nav className="flex flex-col p-4 space-y-3">
@@ -115,7 +115,7 @@ const Header = () => {
             </button>
             
             <button
-              onClick={() => handleNavigation('AIColorDetection')}
+              onClick={() => handleNavigation('ColorGuideVastu')}
               className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 transition-colors duration-200 py-2"
             >
               <FontAwesomeIcon icon={faBookOpen} />
