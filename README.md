@@ -122,6 +122,21 @@ npm run dev
 HOMEPAGE
 ![Screenshot 2025-06-24 180202](https://github.com/user-attachments/assets/f16da47a-5bb8-476d-8f26-5bc141a09c24)
 
+COLOR & OBJECT DETECTION SECTION
+![Screenshot 2025-06-24 180418](https://github.com/user-attachments/assets/b302ab79-d9a9-4575-97f4-4c4d8b8eb6c3)
+
+![Screenshot 2025-06-24 180504](https://github.com/user-attachments/assets/a1526199-806f-47f6-8f84-1e85bf1237ad)
+
+VASTU GUIDELINES SECTION
+![Screenshot 2025-06-24 180530](https://github.com/user-attachments/assets/b2195efc-b73f-4e61-bd67-8cf776e27caf)
+
+COLOR GUIDE SECTION
+![Screenshot 2025-06-24 180554](https://github.com/user-attachments/assets/99b71110-0ed9-4e9f-81ca-d2d44d71afca)
+
+
+
+
+
 
 
 ## 📜 License
