@@ -119,6 +119,7 @@ npm run dev
 > “A user uploads a photo of their bedroom wall facing East. The app detects a red color and warns that it's not Vastu-compliant for the East direction. It then suggests switching to green or white and offers spiritual remedies.”
 
 ---
+HOMEPAGE
 ![Screenshot 2025-06-24 180202](https://github.com/user-attachments/assets/f16da47a-5bb8-476d-8f26-5bc141a09c24)
 
 
