@@ -12,6 +12,7 @@ An AI-powered web application that helps users align their living spaces with **
 * 🧭 Direction-based Vastu suggestions (e.g., North-East, South-West)
 * 🧘 Room-type input (Bedroom, Kitchen, etc.) for personalized advice
 * 🛠️ Remedy suggestions or color changes if the current color is non-compliant
+* 🍫 Food Wrapper Analyzer: Upload a food wrapper image, extract and analyze ingredients for healthiness using Tesseract OCR, AI, keyword lists, and the Spoonacular API
 
 ---
 
@@ -30,6 +31,8 @@ An AI-powered web application that helps users align their living spaces with **
 * Scikit-learn (for K-Means clustering)
 * NumPy
 * Flask-CORS
+* Spoonacular API (for ingredient analysis in Food Wrapper Analyzer)
+* Tesseract.js (for OCR in Food Wrapper Analyzer)
 
 ---
 
@@ -78,7 +81,8 @@ AI-POWERED-HARMONIOUS-LIVING-PROJECT/
 │       │   │   ├── AIColorDetection.jsx
 │       │   │   ├── VastuGuideLines.jsx
 │       │   │   ├── ColorGuideVastu.jsx
-│       │   │   └── Header.jsx
+│       │   │   ├── Header.jsx
+│       │   │   └── FoodWrapperAnalyzer.jsx
 │       │   ├── App.jsx
 │       │   ├── main.jsx
 │       │   ├── App.css
@@ -133,6 +137,10 @@ VASTU GUIDELINES SECTION
 COLOR GUIDE SECTION
 ![Screenshot 2025-06-24 180554](https://github.com/user-attachments/assets/99b71110-0ed9-4e9f-81ca-d2d44d71afca)
 
+FOOD WRAPPER ANALYZER SECTION
+<img width="1896" height="909" alt="Screenshot 2025-07-12 113039" src="https://github.com/user-attachments/assets/5fd02c16-7b87-422d-9b4d-447c88de7d4c" />
+
+
 
 
 
@@ -144,5 +152,4 @@ COLOR GUIDE SECTION
 This project is open-source and available under the [MIT License](LICENSE).
 
 ---
-
 
