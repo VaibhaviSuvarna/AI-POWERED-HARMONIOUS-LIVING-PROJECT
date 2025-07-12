@@ -7,6 +7,7 @@ import {
   faBookOpen,
   faBars,
   faTimes,
+  faUtensils
 } from "@fortawesome/free-solid-svg-icons";
 
 const Header = () => {
@@ -75,6 +76,14 @@ const Header = () => {
             <FontAwesomeIcon icon={faBookOpen} />
             <span>Color Guide</span>
           </button>
+
+          <button
+            onClick={() => handleNavigation('FoodWrapperAnalyzer')}
+            className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200"
+          >
+            <FontAwesomeIcon icon={faUtensils} />
+            <span>Food Wrapper</span>
+          </button>
         </nav>
 
         {/* Mobile Menu Toggle Section*/}
@@ -120,6 +129,14 @@ const Header = () => {
             >
               <FontAwesomeIcon icon={faBookOpen} />
               <span>Color Guide</span>
+            </button>
+
+            <button
+              onClick={() => handleNavigation('FoodWrapperAnalyzer')}
+              className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 transition-colors duration-200 py-2"
+            >
+              <FontAwesomeIcon icon={faUtensils} />
+              <span>Food Wrapper Analyzer</span>
             </button>
           </nav>
         </div>

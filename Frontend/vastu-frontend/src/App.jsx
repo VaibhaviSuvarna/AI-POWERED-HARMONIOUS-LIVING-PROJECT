@@ -5,6 +5,7 @@ import AIColorDetection from "./components/AIColorDetection";
 import './App.css';
 import VastuGuidelines from "./components/VastuGuideLines";
 import ColorGuideVastu from "./components/ColorGuideVastu";
+import FoodWrapperAnalyzer from "./components/FoodWrapperAnalyzer";
 
 function App() {
   return (
@@ -20,9 +21,13 @@ function App() {
       <div id="VastuGuideLines">
         <VastuGuidelines />
       </div>
+      <div id="FoodWrapperAnalyzer">
+        <FoodWrapperAnalyzer />
+      </div>
       <div id="ColorGuideVastu">
         <ColorGuideVastu/>
       </div>
+      
     </>
   );
 }
