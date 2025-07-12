@@ -138,6 +138,13 @@ COLOR GUIDE SECTION
 ![Screenshot 2025-06-24 180554](https://github.com/user-attachments/assets/99b71110-0ed9-4e9f-81ca-d2d44d71afca)
 
 FOOD WRAPPER ANALYZER SECTION
+<img width="1138" height="287" alt="Screenshot 2025-07-12 112847" src="https://github.com/user-attachments/assets/19b0a2d8-ed6e-4fb8-9079-d04bddd818f9" />
+
+<img width="1896" height="910" alt="Screenshot 2025-07-12 112934" src="https://github.com/user-attachments/assets/4a7bc3be-7fdd-45f5-9595-11348ac0388e" />
+
+<img width="1899" height="909" alt="Screenshot 2025-07-12 113020" src="https://github.com/user-attachments/assets/af7909ca-f897-4045-9123-34c8fc1730f0" />
+
+
 <img width="1896" height="909" alt="Screenshot 2025-07-12 113039" src="https://github.com/user-attachments/assets/5fd02c16-7b87-422d-9b4d-447c88de7d4c" />
 
 
