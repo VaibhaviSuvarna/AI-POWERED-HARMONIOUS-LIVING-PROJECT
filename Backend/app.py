@@ -847,6 +847,8 @@ def internal_error(e):
     return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
+    import os
+    port = int(os.environ.get('PORT', 5000))
     print("Starting Vastu Color and Object Detection API...")
     print("Available endpoints:")
     print("  POST /upload - Upload image")
@@ -854,5 +856,5 @@ if __name__ == '__main__':
     print("  POST /analyze_image - Analyze dominant colors")
     print("  POST /analyze_image_with_objects - Analyze image with object detection")
     print("  GET /uploads/<filename> - Serve uploaded files")
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    app.run(debug=False, host='0.0.0.0', port=port)
