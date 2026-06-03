@@ -33,7 +33,14 @@ An AI-powered web application that helps users align their living spaces with **
 
 ---
 
-## 📷 How It Works
+## � Deployment
+
+- Frontend: Deployed on Vercel
+- Backend: Deployed on Hugging Face Spaces 
+
+---
+
+## �📷 How It Works
 
 1. **Image Upload:** User uploads an image of a room wall.
 2. **Color Detection:**
