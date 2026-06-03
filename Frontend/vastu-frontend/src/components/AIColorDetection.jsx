@@ -14,7 +14,7 @@ const AIColorDetection = () => {
   const fileInputRef = useRef(null);
   const imageRef = useRef(null);
 
-  const API_BASE_URL = 'http://localhost:5000';
+  const API_BASE_URL = 'https://ai-powered-harmonious-living-backend.onrender.com/';
 
   const handleImageUpload = async (file) => {
     if (!file) return;
