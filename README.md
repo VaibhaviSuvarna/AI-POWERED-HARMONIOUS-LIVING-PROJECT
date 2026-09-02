@@ -1,6 +1,8 @@
 # 🏠 AI Powered Harmonious Living – Vastu Compliance Web App
 
-An AI-powered web application that helps users align their living spaces with **Vastu Shastra** by analyzing room images, detecting wall colors using OpenCV, and suggesting appropriate remedies or changes based on direction and color psychology.
+An AI-powered web application that helps users align their living spaces with **Vastu Shastra** by analyzing room images, detecting wall colors using OpenCV, and suggesting appropriate remedies or [...]
+
+**Note:** This project was developed as part of an internship.
 
 ---
 
@@ -123,7 +125,7 @@ npm run dev
 
 ## 🧪 Sample Use Case
 
-> “A user uploads a photo of their bedroom wall facing East. The app detects a red color and warns that it's not Vastu-compliant for the East direction. It then suggests switching to green or white and offers spiritual remedies.”
+> “A user uploads a photo of their bedroom wall facing East. The app detects a red color and warns that it's not Vastu-compliant for the East direction. It then suggests switching to green or w[...]
 
 ---
 HOMEPAGE
@@ -146,10 +148,9 @@ COLOR GUIDE SECTION
 
 
 
+
 ## 📜 License
 
 This project is open-source and available under the [MIT License](LICENSE).
 
 ---
-
-
